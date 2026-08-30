@@ -23,7 +23,7 @@
 // yazınca tüm cihazlarda otomatik geçerli olur; ⚙️ ile bir cihazda
 // farklı bir numara/link girilirse o cihazda bu varsayılanın önüne
 // geçer (kişisel tercih, sadece o cihazda geçerlidir).
-const DEFAULT_WHATSAPP_TARGET = "";
+const DEFAULT_WHATSAPP_TARGET = "https://chat.whatsapp.com/HkFgG8HioSCBFkhNcyAZHw?s=cl&p=i&mlu=4";
 
 const WHATSAPP_TARGET_STORAGE_KEY = "kubban_whatsapp_target";
 
