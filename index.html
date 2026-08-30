@@ -10,6 +10,7 @@
 <body>
   <main class="page">
     <header class="header">
+      <button type="button" id="settingsBtn" class="settings-btn" aria-label="WhatsApp hedefini ayarla">⚙️</button>
       <h1>KÜBBAN REZERVASYON</h1>
       <p class="subtitle">Kübban Gaziantep Mutfağı</p>
     </header>
@@ -56,6 +57,23 @@
       </button>
     </form>
   </main>
+
+  <div id="settingsOverlay" class="overlay" hidden>
+    <div class="overlay-card">
+      <h2>WhatsApp Hedefi</h2>
+      <p class="overlay-text">
+        Rezervasyon mesajlarının otomatik gideceği WhatsApp numarasını veya
+        grup davet linkini girin. Bu ayar bu cihazda hatırlanır, bir daha
+        sormaz.
+      </p>
+      <input type="text" id="targetInput" placeholder="Örn: 05301234567 veya grup linki" autocomplete="off" />
+      <span class="error" id="err-target"></span>
+      <div class="overlay-actions">
+        <button type="button" id="saveTargetBtn" class="save-btn">Kaydet</button>
+        <button type="button" id="skipTargetBtn" class="skip-btn">Şimdilik Geç</button>
+      </div>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>

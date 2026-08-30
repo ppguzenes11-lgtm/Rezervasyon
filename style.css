@@ -25,8 +25,21 @@ body {
 }
 
 .header {
+  position: relative;
   text-align: center;
   margin-bottom: 24px;
+}
+
+.settings-btn {
+  position: absolute;
+  top: -4px;
+  right: 0;
+  border: none;
+  background: none;
+  font-size: 22px;
+  padding: 8px;
+  cursor: pointer;
+  line-height: 1;
 }
 
 .header h1 {
@@ -120,4 +133,91 @@ body {
   .header h1 {
     font-size: 19px;
   }
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 20, 18, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 10;
+}
+
+.overlay[hidden] {
+  display: none;
+}
+
+.overlay-card {
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 22px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.overlay-card h2 {
+  margin: 0 0 8px;
+  font-size: 18px;
+  color: #0b7d3e;
+}
+
+.overlay-text {
+  margin: 0 0 16px;
+  font-size: 14px;
+  color: #55605a;
+  line-height: 1.4;
+}
+
+.overlay-card input {
+  width: 100%;
+  font-size: 17px;
+  padding: 14px 16px;
+  border: 2px solid #e2e6e4;
+  border-radius: 14px;
+  background: #fafbfa;
+  color: #1c1f1e;
+  outline: none;
+}
+
+.overlay-card input:focus {
+  border-color: #0b7d3e;
+  background: #ffffff;
+}
+
+.overlay-card input.invalid {
+  border-color: #e0453c;
+  background: #fff5f4;
+}
+
+.overlay-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.save-btn {
+  flex: 1;
+  padding: 14px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  background: #12a24a;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.skip-btn {
+  padding: 14px 16px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #6b7570;
+  background: #f0f2f1;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
 }

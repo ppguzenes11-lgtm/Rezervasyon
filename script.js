@@ -1,20 +1,23 @@
 // =========================================================
 // KÜBBAN REZERVASYON - script.js
 // =========================================================
-// Buraya rezervasyon mesajlarının gönderileceği WhatsApp hedefini girin.
+// WhatsApp hedefi (numara veya grup linki) artık kod içinde sabit
+// yazılmıyor; kullanıcı ilk açılışta ayarlar ve tarayıcının
+// localStorage'ında saklanır. "Gönder" her basıldığında aynı hedef
+// otomatik kullanılır, tekrar seçim yapılmaz. Hedef, ⚙️ butonundan
+// istenildiği zaman değiştirilebilir.
+//
 // Kabul edilen değerler:
 //   1) Bir telefon numarası (ülke koduyla), örn: "905301234567"
 //      -> Mesaj doğrudan bu numaranın sohbetinde hazır olarak açılır.
 //   2) "https://wa.me/..." veya "https://api.whatsapp.com/send..." linki
 //      -> Aynı numaraya mesaj hazır şekilde eklenir.
-//   3) Boş bırakılırsa ("") WhatsApp'ın kişi/grup seçme ekranı açılır,
-//      kullanıcı mesajı göndereceği sohbeti (grubu) kendisi seçer.
-//      (WhatsApp, tarayıcıdan bir davet linkiyle doğrudan bir gruba
-//      hazır mesaj göndermeyi desteklemediği için en güvenilir yöntem budur.)
-//   4) "https://chat.whatsapp.com/..." gibi bir grup davet linki girilirse,
-//      mesaj panoya kopyalanır ve grup linki yeni sekmede açılır; kullanıcı
-//      mesajı grup içine yapıştırıp gönderir.
-const WHATSAPP_GROUP_LINK = "";
+//   3) "https://chat.whatsapp.com/..." gibi bir grup davet linki girilirse
+//      (WhatsApp, tarayıcıdan bir davet linkiyle doğrudan bir gruba hazır
+//      mesaj göndermeyi desteklemediği için) mesaj panoya kopyalanır ve
+//      grup linki yeni sekmede açılır; kullanıcı mesajı grup içine
+//      yapıştırıp gönderir.
+const WHATSAPP_TARGET_STORAGE_KEY = "kubban_whatsapp_target";
 
 const RESTAURANT_NAME = "KÜBBAN GAZİANTEP MUTFAĞI";
 
@@ -37,6 +40,61 @@ const fields = {
   phone: document.getElementById("phone"),
   location: document.getElementById("location")
 };
+
+const settingsBtn = document.getElementById("settingsBtn");
+const settingsOverlay = document.getElementById("settingsOverlay");
+const targetInput = document.getElementById("targetInput");
+const targetError = document.getElementById("err-target");
+const saveTargetBtn = document.getElementById("saveTargetBtn");
+const skipTargetBtn = document.getElementById("skipTargetBtn");
+
+function getSavedTarget() {
+  try {
+    return (localStorage.getItem(WHATSAPP_TARGET_STORAGE_KEY) || "").trim();
+  } catch (err) {
+    return "";
+  }
+}
+
+function saveTarget(value) {
+  try {
+    localStorage.setItem(WHATSAPP_TARGET_STORAGE_KEY, value.trim());
+  } catch (err) {
+    // localStorage kullanılamıyorsa (gizli sekme vb.) sessizce geç.
+  }
+}
+
+function openSettings() {
+  targetInput.value = getSavedTarget();
+  targetInput.classList.remove("invalid");
+  targetError.textContent = "";
+  settingsOverlay.hidden = false;
+  skipTargetBtn.hidden = !getSavedTarget();
+  setTimeout(() => targetInput.focus(), 0);
+}
+
+function closeSettings() {
+  settingsOverlay.hidden = true;
+}
+
+settingsBtn.addEventListener("click", openSettings);
+
+skipTargetBtn.addEventListener("click", closeSettings);
+
+saveTargetBtn.addEventListener("click", () => {
+  const value = targetInput.value.trim();
+  if (!value) {
+    targetInput.classList.add("invalid");
+    targetError.textContent = "Numara veya grup linki girilmelidir.";
+    return;
+  }
+  saveTarget(value);
+  closeSettings();
+});
+
+if (!getSavedTarget()) {
+  openSettings();
+}
 
 function toUpperTr(value) {
   return value.trim().toLocaleUpperCase("tr-TR");
@@ -138,9 +196,14 @@ async function copyToClipboard(text) {
 }
 
 async function sendToWhatsApp(message) {
-  const target = WHATSAPP_GROUP_LINK.trim();
+  const target = getSavedTarget();
 
-  if (target && isGroupInviteLink(target)) {
+  if (!target) {
+    openSettings();
+    return;
+  }
+
+  if (isGroupInviteLink(target)) {
     const copied = await copyToClipboard(message);
     alert(
       copied
@@ -152,16 +215,10 @@ async function sendToWhatsApp(message) {
   }
 
   const encodedMessage = encodeURIComponent(message);
-  let whatsappUrl;
-
-  if (target) {
-    const phoneDigits = extractPhoneDigits(target);
-    whatsappUrl = phoneDigits
-      ? `https://wa.me/${phoneDigits}?text=${encodedMessage}`
-      : `https://wa.me/?text=${encodedMessage}`;
-  } else {
-    whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
-  }
+  const phoneDigits = extractPhoneDigits(target);
+  const whatsappUrl = phoneDigits
+    ? `https://wa.me/${phoneDigits}?text=${encodedMessage}`
+    : `https://wa.me/?text=${encodedMessage}`;
 
   window.open(whatsappUrl, "_blank", "noopener");
 }
