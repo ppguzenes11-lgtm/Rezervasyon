@@ -243,12 +243,7 @@ async function sendToWhatsApp(message) {
   // bu yüzden mesaj panoya kopyalanır ve verilen grup linki doğrudan açılır,
   // kullanıcı sadece tek dokunuşla yapıştırıp gönderir.
   if (isGroupInviteLink(target)) {
-    const copied = await copyToClipboard(message);
-    alert(
-      copied
-        ? "Mesaj panoya kopyalandı. Açılan grup sohbetine yapıştırıp gönderin."
-        : "Mesajı panoya kopyalayamadık. Açılan grup sohbetine mesajı elle yapıştırın."
-    );
+    await copyToClipboard(message);
     window.open(target, "_blank", "noopener");
     return;
   }
