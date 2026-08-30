@@ -1,6 +1,6 @@
 {
   "name": "Kübban Rezervasyon",
-  "short_name": "Kübban",
+  "short_name": "Rezervasyon",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
