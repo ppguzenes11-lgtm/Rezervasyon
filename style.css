@@ -106,10 +106,40 @@ body {
   border: 1px solid var(--line);
 }
 
+.field-row {
+  display: flex;
+  gap: 12px;
+}
+
+.field-row .field {
+  flex: 1;
+  min-width: 0;
+}
+
+.field-row input {
+  padding-left: 12px;
+  padding-right: 8px;
+}
+
+@media (max-width: 360px) {
+  .field-row input {
+    font-size: 15.5px;
+    padding-left: 10px;
+    padding-right: 6px;
+  }
+}
+
 .field {
   display: flex;
   flex-direction: column;
   gap: 6px;
+}
+
+.date-hint {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 0.2px;
 }
 
 .field label {

@@ -49,6 +49,8 @@ const fields = {
   location: document.getElementById("location")
 };
 
+const dateHint = document.getElementById("dateHint");
+
 const settingsBtn = document.getElementById("settingsBtn");
 const settingsOverlay = document.getElementById("settingsOverlay");
 const targetInput = document.getElementById("targetInput");
@@ -123,6 +125,24 @@ function formatDateTr(isoDate) {
 function formatTimeTr(isoTime) {
   return isoTime.replace(":", ".");
 }
+
+function todayIso() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function updateDateHint() {
+  dateHint.textContent = fields.date.value ? formatDateTr(fields.date.value) : "";
+}
+
+if (!fields.date.value) {
+  fields.date.value = todayIso();
+}
+updateDateHint();
+fields.date.addEventListener("input", updateDateHint);
 
 function clearErrors() {
   Object.keys(fields).forEach((key) => {
