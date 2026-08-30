@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Kübban Rezervasyon</title>
+  <meta name="theme-color" content="#0b7d3e" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="page">
+    <header class="header">
+      <h1>KÜBBAN REZERVASYON</h1>
+      <p class="subtitle">Kübban Gaziantep Mutfağı</p>
+    </header>
+
+    <form id="reservationForm" class="form" novalidate>
+      <div class="field">
+        <label for="customerName">👤 Müşteri Adı</label>
+        <input type="text" id="customerName" name="customerName" placeholder="Ad Soyad" autocomplete="off" />
+        <span class="error" id="err-customerName"></span>
+      </div>
+
+      <div class="field">
+        <label for="date">📅 Tarih</label>
+        <input type="date" id="date" name="date" />
+        <span class="error" id="err-date"></span>
+      </div>
+
+      <div class="field">
+        <label for="time">🕒 Saat</label>
+        <input type="time" id="time" name="time" />
+        <span class="error" id="err-time"></span>
+      </div>
+
+      <div class="field">
+        <label for="guestCount">👥 Kişi Sayısı</label>
+        <input type="number" id="guestCount" name="guestCount" min="1" inputmode="numeric" placeholder="Örn: 4" />
+        <span class="error" id="err-guestCount"></span>
+      </div>
+
+      <div class="field">
+        <label for="phone">📞 Telefon</label>
+        <input type="tel" id="phone" name="phone" inputmode="tel" placeholder="0555 123 45 67" autocomplete="off" />
+        <span class="error" id="err-phone"></span>
+      </div>
+
+      <div class="field">
+        <label for="location">📍 Yer</label>
+        <input type="text" id="location" name="location" placeholder="Örn: Bahçe" autocomplete="off" />
+        <span class="error" id="err-location"></span>
+      </div>
+
+      <button type="submit" id="sendBtn" class="send-btn">
+        🟢 WHATSAPP'A GÖNDER
+      </button>
+    </form>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
