@@ -13,10 +13,10 @@
 //   2) "https://wa.me/..." veya "https://api.whatsapp.com/send..." linki
 //      -> Aynı numaraya mesaj hazır şekilde eklenir.
 //   3) "https://chat.whatsapp.com/..." gibi bir grup davet linki girilirse
-//      (WhatsApp, tarayıcıdan bir davet linkiyle doğrudan bir gruba hazır
-//      mesaj göndermeyi desteklemediği için) mesaj panoya kopyalanır ve
-//      grup linki yeni sekmede açılır; kullanıcı mesajı grup içine
-//      yapıştırıp gönderir.
+//      (WhatsApp, bir davet linkiyle doğrudan bir gruba hazır mesaj
+//      göndermeyi desteklemediği için) WhatsApp'ın kendi sohbet seçme
+//      ekranı hazır mesajla açılır; kullanıcı listeden grubu seçip
+//      WhatsApp'ın kendi gönder tuşuna basar (elle yapıştırma gerekmez).
 //
 // DEFAULT_WHATSAPP_TARGET: uygulamanın kutudan çıktığı gibi (hiçbir
 // cihazda ayar yapılmadan) kullanacağı sabit hedef. Buraya bir kez
@@ -218,15 +218,6 @@ function extractPhoneDigits(value) {
   return digits || null;
 }
 
-async function copyToClipboard(text) {
-  try {
-    await navigator.clipboard.writeText(text);
-    return true;
-  } catch (err) {
-    return false;
-  }
-}
-
 async function sendToWhatsApp(message) {
   const target = getEffectiveTarget();
 
@@ -235,19 +226,13 @@ async function sendToWhatsApp(message) {
     return;
   }
 
-  if (isGroupInviteLink(target)) {
-    const copied = await copyToClipboard(message);
-    alert(
-      copied
-        ? "Mesaj panoya kopyalandı. Açılan grup sohbetine yapıştırıp gönderin."
-        : "Mesajı panoya kopyalayamadık. Açılan grup sohbetine mesajı elle yapıştırın."
-    );
-    window.open(target, "_blank", "noopener");
-    return;
-  }
-
   const encodedMessage = encodeURIComponent(message);
-  const phoneDigits = extractPhoneDigits(target);
+
+  // Grup davet linkleri WhatsApp tarafından mesaj ön-doldurmayı desteklemez.
+  // Bu durumda WhatsApp'ın kendi sohbet seçme ekranı açılır: mesaj hazır
+  // gelir, kullanıcı sadece listeden grubu seçip WhatsApp'ın kendi gönder
+  // tuşuna basar (elle kopyala/yapıştır gerekmez).
+  const phoneDigits = isGroupInviteLink(target) ? null : extractPhoneDigits(target);
   const whatsappUrl = phoneDigits
     ? `https://wa.me/${phoneDigits}?text=${encodedMessage}`
     : `https://wa.me/?text=${encodedMessage}`;
