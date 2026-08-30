@@ -17,6 +17,14 @@
 //      mesaj göndermeyi desteklemediği için) mesaj panoya kopyalanır ve
 //      grup linki yeni sekmede açılır; kullanıcı mesajı grup içine
 //      yapıştırıp gönderir.
+//
+// DEFAULT_WHATSAPP_TARGET: uygulamanın kutudan çıktığı gibi (hiçbir
+// cihazda ayar yapılmadan) kullanacağı sabit hedef. Buraya bir kez
+// yazınca tüm cihazlarda otomatik geçerli olur; ⚙️ ile bir cihazda
+// farklı bir numara/link girilirse o cihazda bu varsayılanın önüne
+// geçer (kişisel tercih, sadece o cihazda geçerlidir).
+const DEFAULT_WHATSAPP_TARGET = "";
+
 const WHATSAPP_TARGET_STORAGE_KEY = "kubban_whatsapp_target";
 
 const RESTAURANT_NAME = "KÜBBAN GAZİANTEP MUTFAĞI";
@@ -48,12 +56,16 @@ const targetError = document.getElementById("err-target");
 const saveTargetBtn = document.getElementById("saveTargetBtn");
 const skipTargetBtn = document.getElementById("skipTargetBtn");
 
-function getSavedTarget() {
+function getStoredTarget() {
   try {
     return (localStorage.getItem(WHATSAPP_TARGET_STORAGE_KEY) || "").trim();
   } catch (err) {
     return "";
   }
+}
+
+function getEffectiveTarget() {
+  return getStoredTarget() || DEFAULT_WHATSAPP_TARGET.trim();
 }
 
 function saveTarget(value) {
@@ -65,11 +77,11 @@ function saveTarget(value) {
 }
 
 function openSettings() {
-  targetInput.value = getSavedTarget();
+  targetInput.value = getEffectiveTarget();
   targetInput.classList.remove("invalid");
   targetError.textContent = "";
   settingsOverlay.hidden = false;
-  skipTargetBtn.hidden = !getSavedTarget();
+  skipTargetBtn.hidden = !getEffectiveTarget();
   setTimeout(() => targetInput.focus(), 0);
 }
 
@@ -92,7 +104,7 @@ saveTargetBtn.addEventListener("click", () => {
   closeSettings();
 });
 
-if (!getSavedTarget()) {
+if (!getEffectiveTarget()) {
   openSettings();
 }
 
@@ -196,7 +208,7 @@ async function copyToClipboard(text) {
 }
 
 async function sendToWhatsApp(message) {
-  const target = getSavedTarget();
+  const target = getEffectiveTarget();
 
   if (!target) {
     openSettings();
