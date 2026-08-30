@@ -134,8 +134,12 @@ function todayIso() {
   return `${year}-${month}-${day}`;
 }
 
+function formatDateForDisplay(isoDate) {
+  return isoDate === todayIso() ? "BUGÜN" : formatDateTr(isoDate);
+}
+
 function updateDateHint() {
-  dateHint.textContent = fields.date.value ? formatDateTr(fields.date.value) : "";
+  dateHint.textContent = fields.date.value ? formatDateForDisplay(fields.date.value) : "";
 }
 
 if (!fields.date.value) {
@@ -192,7 +196,7 @@ function validateForm() {
 
 function buildMessage() {
   const name = toUpperTr(fields.customerName.value);
-  const dateText = formatDateTr(fields.date.value);
+  const dateText = formatDateForDisplay(fields.date.value);
   const timeText = formatTimeTr(fields.time.value);
   const guestText = `${Number(fields.guestCount.value)} KİŞİ`;
   const phoneText = fields.phone.value.trim();
